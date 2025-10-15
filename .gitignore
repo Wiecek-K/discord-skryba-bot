@@ -1,0 +1,13 @@
+# Pliki środowiskowe - NIGDY nie wysyłaj ich do repozytorium!
+.env
+
+# Pliki cache Pythona
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Foldery wirtualnego środowiska (dobra praktyka)
+venv/
+.venv/
+env/
