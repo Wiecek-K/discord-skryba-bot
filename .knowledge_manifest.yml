@@ -1,0 +1,7 @@
+# Plik manifestu określający, które pliki wchodzą w skład bazy wiedzy.
+# Tylko pliki wymienione tutaj zostaną zindeksowane w bazie wektorowej.
+
+files:
+  - it/linki.md
+  - marketing/zasoby.md
+  - projekty/ciekawe_narzedzia.md
