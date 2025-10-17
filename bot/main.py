@@ -10,7 +10,7 @@ from commands import register_commands
 print("LOG [Main]: Inicjalizacja klienta Qdrant...")
 try:
     # --- POPRAWKA LITERÓWKI ---
-    qdrant_client = QdrantClient(host=config.QDRANT_HOST, port=config.QDRANT_PORT)
+    qdrant_client = QdrantClient(url=f"http://{config.QDRANT_HOST}:{config.QDRANT_PORT}")
     qdrant_client.get_collections()
     print("LOG [Main]: Pomyślnie połączono z Qdrant.")
 except Exception as e:
