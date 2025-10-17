@@ -3,12 +3,14 @@ import os
 from dotenv import load_dotenv
 
 print("LOG [Config]: Wczytywanie konfiguracji z pliku .env...")
-load_dotenv(dotenv_path='../.env') # Wskazujemy ścieżkę do pliku .env w głównym katalogu
+# ZMIANA: Ustawiamy ścieżkę do .env na stałe, aby działało wszędzie
+dotenv_path = os.path.join(os.path.dirname(__file__), '..', '.env')
+load_dotenv(dotenv_path=dotenv_path)
 
 # --- Konfiguracja Discord ---
 DISCORD_BOT_TOKEN = os.getenv("DISCORD_BOT_TOKEN")
 AUTHORIZED_ROLE_NAME = "Bibliotekarz"
-TEST_GUILD_ID = 1348715361867923537 # ID serwera deweloperskiego
+TEST_GUILD_ID = 1348715361867923537
 
 # --- Konfiguracja Qdrant ---
 QDRANT_HOST = os.getenv("QDRANT_HOST")
@@ -32,8 +34,8 @@ try:
     if not private_key_path_from_env:
         raise ValueError("Zmienna GITHUB_APP_PRIVATE_KEY_PATH nie jest ustawiona w .env")
     
-    # Ścieżka jest teraz budowana względem głównego katalogu projektu
-    key_file_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', private_key_path_from_env))
+    # Ścieżka do klucza wewnątrz kontenera będzie teraz poprawna
+    key_file_path = f"/{private_key_path_from_env}"
     
     print(f"LOG [Config]: Próba odczytu klucza prywatnego z pliku: {key_file_path}")
     with open(key_file_path, 'r') as f:
@@ -42,5 +44,7 @@ try:
     print("LOG [Config]: Pomyślnie wczytano konfigurację GitHub App.")
 except Exception as e:
     print(f"KRYTYCZNY BŁĄD [Config]: Nie udało się wczytać konfiguracji GitHub App! Błąd: {e}")
+    # --- ZMIANA: Rzucamy wyjątek, aby zatrzymać aplikację ---
+    raise
 
 print("LOG [Config]: Konfiguracja wczytana.")

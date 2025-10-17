@@ -4,23 +4,23 @@ services:
     image: qdrant/qdrant:latest
     restart: always
     ports:
-      # Port 6333 dla API i interfejsu webowego
       - "6333:6333"
-      # Port 6334 dla gRPC (opcjonalnie, ale dobra praktyka)
       - "6334:6334"
     volumes:
-      # Używamy nazwanego wolumenu do przechowywania danych Qdrant
       - qdrant_data:/qdrant/storage
 
   discord-bot:
     build:
-      context: . # Ustawia główny katalog projektu jako kontekst
-      dockerfile: bot/Dockerfile # Wskazuje dokładną lokalizację Dockerfile
+      context: .
+      dockerfile: bot/Dockerfile
     restart: always
     env_file:
       - .env
     environment:
       - PYTHONUNBUFFERED=1
+    # --- ZMIANA: Dodajemy mapowanie wolumenów dla klucza ---
+    volumes:
+      - ./keys:/keys
     depends_on:
       - qdrant
 
