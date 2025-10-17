@@ -44,6 +44,7 @@ def register_commands(tree: app_commands.CommandTree, bot: discord.Client):
                 collection_name=config.QDRANT_COLLECTION_NAME,
                 query_vector=query_embedding,
                 limit=5,
+                score_threshold=0.35,
                 with_payload=True
             )
 
