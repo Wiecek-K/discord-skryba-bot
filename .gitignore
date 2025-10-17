@@ -12,3 +12,6 @@ venv/
 .venv/
 env/
 keys/
+
+
+.claude/settings.json
