@@ -1,5 +1,7 @@
-chromadb
+# requirements.txt
+qdrant-client
 sentence-transformers
 pandas
 lxml
 pyyaml
+tqdm

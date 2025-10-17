@@ -1,9 +1,5 @@
-# --- Konfiguracja dla PyTorch (CPU-only) ---
-# Mówimy pip, aby oprócz standardowego repozytorium (PyPI),
-# sprawdzał również to specjalne repozytorium dla wersji CPU PyTorch.
+# bot/requirements.txt
 --extra-index-url https://download.pytorch.org/whl/cpu
-
-# --- Główne zależności bota ---
 torch
 torchvision
 torchaudio
@@ -11,5 +7,6 @@ discord.py
 python-dotenv
 requests
 PyGithub
-chromadb-client
+qdrant-client
 sentence-transformers
+watchfiles # <-- DODAJ TĘ LINIĘ

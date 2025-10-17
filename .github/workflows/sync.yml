@@ -3,7 +3,14 @@ name: Sync Knowledge Base to ChromaDB
 on:
   push:
     branches:
-      - main  # Uruchom tylko po mergu/pushu do gałęzi 'main'
+      - main
+    # Uruchom workflow TYLKO, jeśli zmieni się jeden z plików z manifestu
+    # lub sam manifest. To oszczędza zasoby.
+    paths:
+      - "it/linki.md"
+      - "marketing/zasoby.md"
+      - "projekty/ciekawe_narzedzia.md"
+      - ".knowledge_manifest.yml"
   workflow_dispatch: # Umożliwia ręczne uruchomienie z interfejsu GitHub
 
 jobs:
@@ -16,18 +23,28 @@ jobs:
       - name: 2. Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: '3.10'
+          python-version: "3.10"
 
-      - name: 3. Cache Sentence Transformers model
+      - name: 3. Cache Python dependencies
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-
+
+      - name: 4. Cache Sentence Transformers model
         uses: actions/cache@v4
         with:
           path: ~/.cache/torch/sentence_transformers
-          key: ${{ runner.os }}-st-cache-${{ hashFiles('**/requirements.txt') }}
+          key: ${{ runner.os }}-st-cache-paraphrase-multilingual-mpnet-base-v2
+          restore-keys: |
+            ${{ runner.os }}-st-cache-
 
-      - name: 4. Install Python dependencies
+      - name: 5. Install Python dependencies
         run: pip install -r requirements.txt
 
-      - name: 5. Run the sync script
+      - name: 6. Run the sync script
         run: python bot/scripts/sync_to_chroma.py
         env:
-          CHROMA_HOST: ${{ secrets.CHROMA_HOST_IP }} # Ważne! Używamy sekretu
+          CHROMA_HOST: ${{ secrets.CHROMA_HOST_IP }}

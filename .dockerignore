@@ -1,0 +1,36 @@
+# .dockerignore
+
+# Ignoruj kontrolę wersji
+.git
+.github
+
+# Ignoruj pliki konfiguracyjne IDE i lokalne
+.vscode/
+.idea/
+.claude/
+
+# Ignoruj środowiska wirtualne Pythona
+.venv
+venv
+env
+
+# Ignoruj pliki cache Pythona
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Ignoruj pliki generowane przez system
+.DS_Store
+Thumbs.db
+
+# Ignoruj pliki tymczasowe i logi
+*.log
+*.tmp
+
+# Ignoruj dane wolumenów Dockera - one są zarządzane osobno
+chroma_data/
+n8n_data/
+
+# Ignoruj plik ze zmiennymi środowiskowymi - nigdy nie powinien trafić do obrazu
+.env

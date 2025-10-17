@@ -1,0 +1,13 @@
+# docker-compose.dev.yml
+services:
+  discord-bot:
+    command: watchfiles --filter python 'python main.py' /app
+    volumes:
+      # Mapowanie kodu aplikacji dla hot-reloadingu
+      - ./bot:/app
+      # ZMIANA 1: Mapujemy folder z kluczem, aby był dostępny w kontenerze
+      - ./keys:/keys
+      # ZMIANA 2 (Ulepszenie): Mapujemy cache modeli AI.
+      # Dzięki temu model pobierze się tylko raz i będzie dostępny od razu
+      # przy kolejnych uruchomieniach, co drastycznie przyspieszy start.
+      - ~/.cache/huggingface/hub:/root/.cache/huggingface/hub
