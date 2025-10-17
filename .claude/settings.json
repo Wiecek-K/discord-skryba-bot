@@ -4,7 +4,7 @@
 
 "ANTHROPIC_BASE_URL": "https://api.z.ai/api/anthropic",
 
-"ANTHROPIC_AUTH_TOKEN": "a66159f2023b4e79a558c809118a47c3.y7KyivZPpLVepu7m",
+"ANTHROPIC_AUTH_TOKEN": "",
 
 "ANTHROPIC_MODEL": "glm-4.6",
 
