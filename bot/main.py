@@ -6,11 +6,10 @@ from sentence_transformers import SentenceTransformer
 import config
 from commands import register_commands
 
-# --- KROK 1: Inicjalizacja usług PRZED uruchomieniem bota ---
+# --- Inicjalizacja usług PRZED uruchomieniem bota ---
 print("LOG [Main]: Inicjalizacja klienta Qdrant...")
 try:
-    # --- POPRAWKA LITERÓWKI ---
-    qdrant_client = QdrantClient(url=f"http://{config.QDRANT_HOST}:{config.QDRANT_PORT}")
+    qdrant_client = QdrantClient(host=config.QDRANT_HOST, port=config.QDRANT_PORT)
     qdrant_client.get_collections()
     print("LOG [Main]: Pomyślnie połączono z Qdrant.")
 except Exception as e:
@@ -29,7 +28,6 @@ except Exception as e:
 intents = discord.Intents.default()
 intents.guilds = True
 bot = discord.Client(intents=intents)
-# Przypisujemy zainicjalizowane usługi do obiektu bota, aby były dostępne w komendach
 bot.qdrant_client = qdrant_client
 bot.search_model = search_model
 tree = app_commands.CommandTree(bot)
@@ -38,13 +36,13 @@ tree = app_commands.CommandTree(bot)
 async def on_ready():
     """
     Wywoływane, gdy bot pomyślnie połączy się z Discordem.
-    Teraz ta funkcja jest szybka i tylko synchronizuje komendy.
     """
     print(f'LOG [Main]: Zalogowano jako {bot.user}')
     print("LOG [Main]: Synchronizowanie drzewa komend...")
-    guild = discord.Object(id=config.TEST_GUILD_ID)
-    await tree.sync(guild=guild)
-    print(f"LOG [Main]: Zsynchronizowano komendy dla serwera deweloperskiego (ID: {config.TEST_GUILD_ID}).")
+    
+    # --- ZMIANA: Synchronizujemy komendy globalnie, a nie dla jednej gildii ---
+    await tree.sync()
+    print("LOG [Main]: Zsynchronizowano komendy globalnie. Zmiany mogą być widoczne z opóźnieniem do 1 godziny.")
 
 @bot.event
 async def on_guild_join(guild: discord.Guild):
@@ -59,7 +57,7 @@ def main():
         return
     
     if not bot.qdrant_client or not bot.search_model:
-        print("KRYTYCZNY BŁĄD [Main]: Bot nie może wystartować z powodu braku połączenia z Qdrant lub braku modelu AI. Sprawdź logi powyżej.")
+        print("KRYTYCZNY BŁĄD [Main]: Bot nie może wystartować z powodu braku połączenia z Qdrant lub braku modelu AI.")
         return
 
     register_commands(tree, bot)
@@ -68,4 +66,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-    

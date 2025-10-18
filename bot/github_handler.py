@@ -4,7 +4,6 @@ import traceback
 from datetime import datetime
 import discord
 from github import Github, Auth, GithubException, GithubIntegration
-# --- ZMIANA IMPORTÓW ---
 import config
 
 async def create_github_pull_request(payload: dict, interaction: discord.Interaction):
@@ -29,7 +28,9 @@ async def create_github_pull_request(payload: dict, interaction: discord.Interac
         repo.create_git_ref(ref=f"refs/heads/{new_branch_name}", sha=source_branch.commit.sha)
         print(f"LOG [GitHub]: Utworzono gałąź '{new_branch_name}'.")
 
-        file_path = f"{payload['channel_name']}/linki.md"
+        # --- ZMIANA: Ustawiamy stałą ścieżkę zapisu dla wszystkich propozycji ---
+        file_path = "new-knowledge/new-knowledge.md"
+        print(f"LOG [GitHub]: Próba pobrania pliku '{file_path}'...")
         try:
             file_content_obj = repo.get_contents(file_path, ref="main")
             current_content = file_content_obj.decoded_content.decode('utf-8')
@@ -51,6 +52,7 @@ async def create_github_pull_request(payload: dict, interaction: discord.Interac
         if file_sha:
             repo.update_file(file_path, commit_message, final_content, file_sha, branch=new_branch_name)
         else:
+            # Jeśli plik nie istnieje, musimy go stworzyć. API GitHuba wymaga podania ścieżki.
             repo.create_file(file_path, commit_message, final_content, branch=new_branch_name)
         print(f"LOG [GitHub]: Zapisano zmiany w gałęzi '{new_branch_name}'.")
 
